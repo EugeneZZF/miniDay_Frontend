@@ -7,7 +7,7 @@ import {
 } from "lucide-react";
 
 const navItems = [
-  { to: "/", icon: SunMedium, label: "Day" },
+  { to: "/quizPage", icon: SunMedium, label: "Day" },
   { to: "/calendar", icon: CalendarDays, label: "Calendar" },
   { to: "/tasks", icon: ClipboardList, label: "Tasks" },
   { to: "/stats", icon: BarChart3, label: "Stats" },

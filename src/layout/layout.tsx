@@ -1,73 +1,150 @@
-import { useState } from "react";
-import { Outlet, useLocation } from "react-router-dom";
+import { useEffect, useMemo, useState } from "react";
+import { useLocation } from "react-router-dom";
 import BottomNav from "./BottomNav";
 import { useNavigate } from "react-router-dom";
-import { AnimatePresence, motion } from "framer-motion";
+import {
+  AnimatePresence,
+  motion,
+  useMotionValue,
+  useAnimation,
+} from "framer-motion";
+import Calendar from "../modules/calendar";
+// import Onboarding from "../modules/onboarding";
+import TaskBoard from "../modules/taskBoard";
+import Statistics from "../modules/statistics";
+import QuizPage from "../modules/quizPage";
 
 const routes = ["/", "/calendar", "/tasks", "/stats"];
 
 export default function Layout() {
   const location = useLocation();
   const navigate = useNavigate();
+
   const [isDark, setIsDark] = useState(() =>
     document.documentElement.classList.contains("dark")
   );
+  const [screenWidth, setScreenWidth] = useState(window.innerWidth);
+  const [screenHeight, setScreenHeight] = useState(window.innerHeight);
+  const [hasSwiped, setHasSwiped] = useState(false); // Флаг для отслеживания свайпов
+  const screens = [
+    { path: "/quizPage", element: <QuizPage /> },
+    { path: "/calendar", element: <Calendar /> },
+    { path: "/tasks", element: <TaskBoard /> },
+    { path: "/stats", element: <Statistics /> },
+  ];
+  const currentIndex = useMemo(
+    () =>
+      Math.max(
+        0,
+        screens.findIndex((s) => s.path === location.pathname)
+      ),
+    [location.pathname, screens]
+  );
 
-  const currentIndex = routes.indexOf(location.pathname);
+  const x = useMotionValue(-currentIndex * screenWidth); // для динамической ширины экрана
+  const controls = useAnimation(); // Контроллер для анимации
+
+  useEffect(() => {
+    controls.start({ x: -currentIndex * screenWidth }); // Начинаем анимацию при изменении индекса экрана
+  }, [currentIndex, controls, screenWidth]);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setScreenWidth(window.innerWidth);
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    // Убираем обработчик при размонтировании компонента
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   const handleDragEnd = (
     _: any,
     info: { offset: { x: number }; velocity: { x: number } }
   ) => {
+    if (hasSwiped) return; // если уже свайпнули, не продолжаем
+
     const offsetX = info.offset.x;
     const velocityX = info.velocity.x;
 
     const swipePower = Math.abs(offsetX) * Math.abs(velocityX);
-    const threshold = 20000;
-    if (swipePower < threshold) return;
-    if (offsetX < 0 && currentIndex < routes.length - 1) {
-      // свайп влево → следующий экран
-      navigate(routes[currentIndex + 1]);
-    } else if (offsetX > 0 && currentIndex > 0) {
-      // свайп вправо → предыдущий
-      navigate(routes[currentIndex - 1]);
+    const threshold = 10000;
+
+    let targetIndex = currentIndex;
+
+    if (swipePower > threshold) {
+      if (offsetX < 0 && currentIndex < screens.length - 1) {
+        // свайп влево → следующий экран
+        targetIndex = currentIndex + 1;
+      } else if (offsetX > 0 && currentIndex > 0) {
+        // свайп вправо → предыдущий
+        targetIndex = currentIndex - 1;
+      }
+    }
+
+    // Анимируем возврат на текущий экран если свайп слабый
+    if (targetIndex === currentIndex) {
+      controls.start({ x: -currentIndex * screenWidth });
+    }
+
+    if (targetIndex !== currentIndex) {
+      navigate(screens[targetIndex].path); // переход к новому экрану
+      setHasSwiped(true); // блокируем дальнейшие свайпы
     }
   };
 
+  // Сбрасываем флаг hasSwiped при изменении пути
+  useEffect(() => {
+    setHasSwiped(false);
+  }, [location.pathname]);
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-white">
+    // внешний контейнер занимает всю высоту экрана и скрывает оверфлоу страницы
+    <div className="h-screen overflow-hidden flex items-center justify-center bg-white">
       <div
         className="
-      w-[390px]
-      max-h-[844px]
-      h-[844px]
-      bg-black
-      text-white
-      
-      shadow-2xl
-      overflow-hidden
-      flex flex-col
-      relative
-      "
+        
+          max-w-full
+          bg-black
+          text-white
+          shadow-2xl
+          overflow-hidden
+          flex flex-col
+          relative
+          h-full
+          w-full
+        "
       >
-        <header className="flex-shrink-0 flex items-center justify-center">
+        {/* <header className="flex-shrink-0 flex items-center justify-center">
           Header
-        </header>
+        </header> */}
+
         <main className="flex-1 overflow-y-auto overflow-x-hidden">
-          <AnimatePresence initial={false} mode="wait">
+          <AnimatePresence initial={false}>
             <motion.div
               key={location.pathname}
-              className="h-full overflow-y-auto"
-              initial={{ x: 40, opacity: 0 }} // вход слева
-              animate={{ x: 0, opacity: 1 }}
-              exit={{ x: -40, opacity: 0 }} // выход вправо
-              transition={{ duration: 0.25 }}
+              className="flex h-full"
               drag="x"
-              dragConstraints={{ left: 0, right: 0 }}
+              dragConstraints={{
+                left: -screenWidth * (screens.length - 1),
+                right: 0,
+              }}
+              style={{ x }}
               onDragEnd={handleDragEnd}
+              transition={{ type: "spring", stiffness: 300, damping: 30 }}
+              animate={controls} // Используем контроллер для анимации
             >
-              {" "}
-              <Outlet />
+              {screens.map((screen) => (
+                <div
+                  key={screen.path}
+                  className="w-full shrink-0 grow-0 h-full"
+                >
+                  {screen.element}
+                </div>
+              ))}
             </motion.div>
           </AnimatePresence>
         </main>

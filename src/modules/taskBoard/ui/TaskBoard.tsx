@@ -1,3 +1,3 @@
 export default function TaskBoard() {
-  return <div>Task board</div>;
+  return <div className="bg-amber-400">Task board</div>;
 }
