@@ -16,8 +16,10 @@ body,
 #root {
   height: 100%;
   width: 100%;
-  overflow: hidden;
 }
 body {
   font-family: "Inter", sans-serif;
+}
+html {
+  font-size: 16px !important;
 }

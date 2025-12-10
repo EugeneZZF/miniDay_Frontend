@@ -103,7 +103,7 @@ export default function Layout() {
 
   return (
     // внешний контейнер занимает всю высоту экрана и скрывает оверфлоу страницы
-    <div className="h-screen overflow-hidden flex items-center justify-center bg-white">
+    <div className="h-screen overflow-y-scroll overflow-x-hidden flex items-center justify-center bg-white">
       <div
         className="
         
@@ -111,7 +111,8 @@ export default function Layout() {
           bg-black
           text-white
           shadow-2xl
-          overflow-hidden
+          overflow-x-hidden
+          overflow-y-scroll
           flex flex-col
           relative
           h-full
@@ -122,7 +123,7 @@ export default function Layout() {
           Header
         </header> */}
 
-        <main className="flex-1 overflow-y-auto overflow-x-hidden">
+        <main className="flex-1  overflow-x-hidden overflow-y-scroll">
           <AnimatePresence initial={false}>
             <motion.div
               key={location.pathname}
