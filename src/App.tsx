@@ -18,13 +18,13 @@ function App() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const onboardingStatus = localStorage.getItem("onboardingComplete");
+    const onboardingStatus = localStorage.getItem("onboardingCompleted");
     if (onboardingStatus === "true") {
       setIsOnboardingCompleted(true);
     }
   }, []);
   const handleOnboardingComplete = () => {
-    localStorage.setItem("onboardingComplete", "true");
+    localStorage.setItem("onboardingCompleted", "true");
     setIsOnboardingCompleted(true);
     navigate("/"); // После завершения анбординга перенаправляем на главную страницу
   };
@@ -44,14 +44,21 @@ function App() {
 
   return (
     <Routes>
-      <Route element={<Layout />}>
-        {/* <Route path="/" element={<Onboarding />} /> */}
-        <Route path="/quizPage" element={<QuizPage />} />
-        <Route path="/" element={<QuizPage />} />
-        <Route path="/calendar" element={<Calendar />} />
-        <Route path="/tasks" element={<TaskBoard />} />
-        <Route path="/stats" element={<Statistics />} />
-      </Route>
+      {/* Если анбординг не завершен, показываем его */}
+      {!isOnboardingCompleted ? (
+        <Route
+          path="/"
+          element={<Onboarding onComplete={handleOnboardingComplete} />}
+        />
+      ) : (
+        <Route element={<Layout />}>
+          <Route path="/quizPage" element={<QuizPage />} />
+          <Route path="/" element={<QuizPage />} />
+          <Route path="/calendar" element={<Calendar />} />
+          <Route path="/tasks" element={<TaskBoard />} />
+          <Route path="/stats" element={<Statistics />} />
+        </Route>
+      )}
     </Routes>
   );
 }
