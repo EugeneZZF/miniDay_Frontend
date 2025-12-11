@@ -1,5 +1,5 @@
-import type CalendarTask from "../../model/types";
-import { taskWarningTime } from "../../lib/dateUtils";
+import type CalendarTask from "../../lib/types";
+import { taskWarningTime } from "../../model/dateUtils";
 import { motion } from "framer-motion";
 import { memo, useMemo } from "react";
 

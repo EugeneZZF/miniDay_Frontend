@@ -1,15 +1,5 @@
 import { format } from "date-fns/format";
-import { differenceInMinutes, formatDistance } from "date-fns";
-
-const daysOfWeek = [
-  "Sunday",
-  "Monday",
-  "Tuesday",
-  "Wednesday",
-  "Thursday",
-  "Friday",
-  "Saturday",
-];
+import { differenceInMinutes } from "date-fns";
 
 export const getDayOfWeek = (today: Date): string => {
   return format(today, "EEEE");

@@ -1,5 +1,5 @@
 export default interface CalendarTask {
-  id: Number;
+  id: number;
   status: "completed" | "in-progress";
   title: string;
   time: string;
