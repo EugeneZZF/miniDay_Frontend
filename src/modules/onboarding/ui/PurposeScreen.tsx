@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { useOnboardingStore } from "../lib/onboardingStore";
 import type { PurposeOption } from "../lib/onboardingStore";
-import { ChartNoAxesCombined, Briefcase, Leaf, Heart } from "lucide-react";
+import { ChartNoAxesCombined, Briefcase, Leaf, Heart, ChevronRight } from "lucide-react";
 
 interface PurposeScreenProps {
   onNext: () => void;
@@ -113,13 +113,14 @@ export default function PurposeScreen({ onNext }: PurposeScreenProps) {
           transition={{ delay: 0.3 }}
           onClick={handleNext}
           disabled={!purpose}
-          className={`w-full py-4 rounded-lg text-lg font-medium transition-opacity ${
+          className={`w-full text-[1.3rem] py-4 rounded-lg text-lg font-medium transition-opacity ${
             purpose
               ? "bg-white text-black hover:opacity-90"
               : "bg-gray-800 text-gray-500 cursor-not-allowed"
           }`}
         >
-          Вперед &gt;
+          Вперед
+          <ChevronRight className="inline-block w-[2rem]" />
         </motion.button>
       </div>
     </div>

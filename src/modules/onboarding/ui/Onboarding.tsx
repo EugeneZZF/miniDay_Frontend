@@ -34,7 +34,7 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
     <WelcomeScreen key="welcome2" text="Это\nMiniDay" onNext={handleNext} />,
     <WelcomeScreen
       key="welcome3"
-      text="Давай настроим \n приложение под тебя"
+      text="Давай настроим\nприложение под тебя"
       onNext={handleNext}
     />,
     <NameScreen key="name" onNext={handleNext} />,

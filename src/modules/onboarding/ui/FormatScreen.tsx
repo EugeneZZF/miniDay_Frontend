@@ -2,7 +2,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { useOnboardingStore } from "../lib/onboardingStore";
 import type { FormatOption } from "../lib/onboardingStore";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, ChevronRight } from "lucide-react";
 
 interface FormatScreenProps {
   onNext: () => void;
@@ -121,13 +121,14 @@ export default function FormatScreen({ onNext }: FormatScreenProps) {
           transition={{ delay: 0.3 }}
           onClick={handleNext}
           disabled={!format}
-          className={`w-full py-4 rounded-lg text-lg font-medium transition-opacity ${
+          className={`w-full text-[1.3rem] py-4 rounded-lg text-lg font-medium transition-opacity ${
             format
               ? "bg-white text-black hover:opacity-90"
               : "bg-gray-800 text-gray-500 cursor-not-allowed"
           }`}
         >
-          Вперед &gt;
+          Вперед
+          <ChevronRight className="inline-block w-[2rem]" />
         </motion.button>
       </div>
     </div>

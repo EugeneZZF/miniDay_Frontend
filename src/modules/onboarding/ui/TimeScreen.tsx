@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { useOnboardingStore } from "../lib/onboardingStore";
-import { Clock, Plus, X } from "lucide-react";
+import { Clock, Plus, X, ChevronRight } from "lucide-react";
 
 interface TimeScreenProps {
   onNext: () => void;
@@ -91,13 +91,14 @@ export default function TimeScreen({ onNext }: TimeScreenProps) {
           transition={{ delay: 0.3 }}
           onClick={handleNext}
           disabled={times.length === 0}
-          className={`w-full py-4 rounded-lg text-lg font-medium transition-opacity ${
+          className={`w-full text-[1.3rem] py-4 rounded-lg text-lg font-medium transition-opacity ${
             times.length > 0
               ? "bg-white text-black hover:opacity-90"
               : "bg-gray-800 text-gray-500 cursor-not-allowed"
           }`}
         >
-          Вперед &gt;
+          Вперед
+          <ChevronRight className="inline-block w-[2rem]" />
         </motion.button>
       </div>
     </div>

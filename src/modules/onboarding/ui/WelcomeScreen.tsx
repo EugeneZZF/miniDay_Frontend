@@ -6,6 +6,8 @@ interface WelcomeScreenProps {
 }
 
 export default function WelcomeScreen({ text, onNext }: WelcomeScreenProps) {
+  const lines = text.split('\n');
+  
   return (
     <div
       onClick={onNext}
@@ -17,7 +19,14 @@ export default function WelcomeScreen({ text, onNext }: WelcomeScreenProps) {
         transition={{ duration: 0.5 }}
         className="text-center px-8"
       >
-        <h1 className="text-4xl font-medium whitespace-pre-line">{text}</h1>
+        <h1 className="text-4xl font-medium leading-relaxed">
+          {lines.map((line, index) => (
+            <span key={index}>
+              {line}
+              {index < lines.length - 1 && <br />}
+            </span>
+          ))}
+        </h1>
       </motion.div>
       {/* <motion.button
         initial={{ opacity: 0 }}
