@@ -49,22 +49,24 @@ export default function NameScreen({ onNext }: NameScreenProps) {
           </div>
         </motion.div>
       </div>
-      <div className="px-8 pb-8">
+      <div className="px-8 pb-8 flex align-middle justify-center">
         <motion.button
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.3 }}
           onClick={handleNext}
           disabled={!inputValue.trim()}
-          className={`w-full text-[1.3rem] py-4 rounded-lg text-lg font-medium transition-opacity ${
-            inputValue.trim()
-              ? "bg-white text-black hover:opacity-90"
-              : "bg-gray-800 text-gray-500 cursor-not-allowed"
-          }`}
+          className={`w-[15rem] flex items-center justify-center h-[2.5rem] text-[1.1rem] 
+             rounded-lg text-lg font-medium transition-opacity ${
+               inputValue.trim()
+                 ? "bg-white text-black hover:opacity-90"
+                 : "bg-gray-800 text-gray-500 cursor-not-allowed"
+             }`}
         >
           {/* <p className="text-[1.3rem]">Вперед</p>{" "} */}
-          Вперед
-          <ChevronRight className="inline-block w-[2rem]" />
+
+          <p>Вперед</p>
+          <ChevronRight className="inline-block mt-[2%] w-[1.4rem]" />
         </motion.button>
       </div>
     </div>

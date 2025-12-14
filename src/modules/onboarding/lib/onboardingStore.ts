@@ -2,24 +2,17 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
 // Типы для ответов онбординга
-export type PurposeOption = 
-  | "productivity" 
-  | "work" 
-  | "structure" 
-  | "wellbeing";
+export type PurposeOption = "productivity" | "work" | "structure" | "wellbeing";
 
-export type FormatOption = 
-  | "mini-quiz" 
-  | "full-diary" 
-  | "free-entry";
+export type FormatOption = "mini-quiz" | "full-diary" | "free-entry";
 
 export interface OnboardingState {
   // Ответы пользователя
   name: string;
   purpose: PurposeOption | null;
-  times: string[]; // Массив времени для заполнения дневника
+  times: string[];
   format: FormatOption | null;
-  
+
   // Действия
   setName: (name: string) => void;
   setPurpose: (purpose: PurposeOption) => void;
@@ -27,7 +20,7 @@ export interface OnboardingState {
   removeTime: (index: number) => void;
   setFormat: (format: FormatOption) => void;
   reset: () => void;
-  
+
   // Статус завершения
   isCompleted: boolean;
   setCompleted: (completed: boolean) => void;
@@ -45,42 +38,41 @@ export const useOnboardingStore = create<OnboardingState>()(
   persist(
     (set) => ({
       ...initialState,
-      
+
       setName: (name: string) => set({ name }),
-      
+
       setPurpose: (purpose: PurposeOption) => set({ purpose }),
-      
-      addTime: (time: string) => 
-        set((state) => ({ 
-          times: [...state.times, time] 
+
+      addTime: (time: string) =>
+        set((state) => ({
+          times: [...state.times, time],
         })),
-      
+
       removeTime: (index: number) =>
         set((state) => ({
           times: state.times.filter((_, i) => i !== index),
         })),
-      
+
       setFormat: (format: FormatOption) => set({ format }),
-      
+
       reset: () => set(initialState),
-      
+
       setCompleted: (completed: boolean) => set({ isCompleted: completed }),
     }),
     {
-      name: "onboarding-storage", // Имя для localStorage
+      name: "onboarding-storage",
     }
   )
 );
 
 // Селекторы для удобства
-export const useOnboardingName = () => 
+export const useOnboardingName = () =>
   useOnboardingStore((state) => state.name);
-export const useOnboardingPurpose = () => 
+export const useOnboardingPurpose = () =>
   useOnboardingStore((state) => state.purpose);
-export const useOnboardingTimes = () => 
+export const useOnboardingTimes = () =>
   useOnboardingStore((state) => state.times);
-export const useOnboardingFormat = () => 
+export const useOnboardingFormat = () =>
   useOnboardingStore((state) => state.format);
-export const useOnboardingIsCompleted = () => 
+export const useOnboardingIsCompleted = () =>
   useOnboardingStore((state) => state.isCompleted);
-

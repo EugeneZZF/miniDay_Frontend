@@ -12,7 +12,7 @@ type OnboardingProps = {
   onComplete: () => void;
 };
 
-const TOTAL_SCREENS = 8; // 3 приветственных + 5 настройки
+const TOTAL_SCREENS = 8;
 
 export default function Onboarding({ onComplete }: OnboardingProps) {
   const [currentScreen, setCurrentScreen] = useState(0);
@@ -22,7 +22,6 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
     if (currentScreen < TOTAL_SCREENS - 1) {
       setCurrentScreen(currentScreen + 1);
     } else {
-      // Завершаем онбординг
       setCompleted(true);
       localStorage.setItem("onboardingCompleted", "true");
       onComplete();
@@ -31,11 +30,12 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
 
   const screens = [
     <WelcomeScreen key="welcome1" text="Привет!" onNext={handleNext} />,
-    <WelcomeScreen key="welcome2" text="Это\nMiniDay" onNext={handleNext} />,
+    <WelcomeScreen key="welcome2" text="Это MiniDay" onNext={handleNext} />,
     <WelcomeScreen
       key="welcome3"
-      text="Давай настроим\nприложение под тебя"
+      text="Давай настроим приложение под тебя"
       onNext={handleNext}
+      textSize="1.6rem"
     />,
     <NameScreen key="name" onNext={handleNext} />,
     <PurposeScreen key="purpose" onNext={handleNext} />,
@@ -45,6 +45,7 @@ export default function Onboarding({ onComplete }: OnboardingProps) {
   ];
 
   return (
+    // <div className="w-full h-screen bg-black overflow-hidden">
     <div className="w-full h-screen bg-black overflow-hidden">
       <AnimatePresence mode="wait">
         <motion.div

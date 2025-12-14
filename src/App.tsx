@@ -44,7 +44,6 @@ function App() {
 
   return (
     <Routes>
-      {/* Если анбординг не завершен, показываем его */}
       {!isOnboardingCompleted ? (
         <Route
           path="/"
@@ -59,6 +58,7 @@ function App() {
           <Route path="/stats" element={<Statistics />} />
         </Route>
       )}
+      {<Route path="*" element={<QuizPage />} />}
     </Routes>
   );
 }
