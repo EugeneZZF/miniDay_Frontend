@@ -41,8 +41,10 @@ export const useSelectedDate = () => useStore((state) => state.selectedDate);
 export const useIsAnimated = () => useStore((state) => state.isAnimated);
 
 // Отдельные селекторы для действий - они стабильны и не вызывают ререндеры
-export const useSetCurrentDate = () => useStore((state) => state.setCurrentDate);
-export const useSetSelectedDate = () => useStore((state) => state.setSelectedDate);
+export const useSetCurrentDate = () =>
+  useStore((state) => state.setCurrentDate);
+export const useSetSelectedDate = () =>
+  useStore((state) => state.setSelectedDate);
 export const useSetPrevMonth = () => useStore((state) => state.setPrevMonth);
 export const useSetNextMonth = () => useStore((state) => state.setNextMonth);
 export const useSetIsAnimated = () => useStore((state) => state.setIsAnimated);

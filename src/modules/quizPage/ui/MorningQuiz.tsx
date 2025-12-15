@@ -2,79 +2,74 @@ import { motion, useMotionValue, useTransform } from "framer-motion";
 // import { fire } from "lucide-react";
 import { getWeatherByDate } from "../lib/weatherApi";
 import { useState, useRef, useEffect } from "react";
+import MorningQuizTitle from "./morningQuizTitle";
+import type { WeatherResult, WeatherError } from "../lib/weatherApi";
 
 export default function MorningQuiz() {
-  const vh = window.innerHeight / 100;
-  const vw = window.innerWidth / 100;
-  async function fetchWeather() {
-    const date = new Date();
-    const weather = await getWeatherByDate(date);
-    console.log("weather fetched", weather);
-  }
+  const [weather, setWeather] = useState<WeatherResult | WeatherError | null>(
+    null
+  );
 
   const y_axios = useMotionValue(0);
-  const yStroke = useTransform(y_axios, [-190, 0], [0 * vh, -15 * vh]);
-  const yStrokeScale = useTransform(y_axios, [-200, 0], [1.25, 0.5], {
+  const y_axios_margin = useTransform(y_axios, [-100, 0], [-300, 0]);
+  //   SUN
+  const yStroke = useTransform(y_axios, [-190, 0], [0, -90]);
+
+  const yStrokeScale = useTransform(y_axios, [-200, 0], [1.0, 0.5], {
     clamp: true,
   });
+  const yStrokeW = useTransform(y_axios, [-200, 0], [85, 45], {
+    clamp: true,
+  });
+
+  // LINES
   const yLineScale = useTransform(y_axios, [-200, 0], [1.45, 0.5], {
     clamp: true,
   });
   // солнышко
-  const ySunCircleScale = useTransform(y_axios, [-145, 0], [1.35, 0.5], {
+  const ySunCircleScale = useTransform(y_axios, [-145, 0], [0.8, 0.5], {
     clamp: true,
   });
-  const ySunCircle = useTransform(y_axios, [0, -145], [0, -5 * vh], {
+  const ySunCircle = useTransform(y_axios, [-145, 0], [-10, 0], {
     clamp: true,
   });
-  const ySunCircleMargin = useTransform(y_axios, [0, -145], [-8 * vh, 0], {
-    clamp: true,
-  });
-  const ySunLineLeft = useTransform(y_axios, [-130, -145], [5.4 * vh, 1], {
-    clamp: true,
-  });
-  const ySunLineRight = useTransform(y_axios, [-130, -145], [5.4 * vh, 1], {
+  const ySunCircleMargin = useTransform(y_axios, [0, -145], [-90, 0], {
     clamp: true,
   });
 
   // слевое солнышко линия
-  const ySunLeftLineBottom = useTransform(
-    y_axios,
-    [0, -145],
-    [-1 * vh, 4.3 * vh],
-    {
-      clamp: true,
-    }
-  );
-  const yLinesOpasity = useTransform(y_axios, [0, -145], [0, 1], {
+  const ySunLeftLineBottom = useTransform(y_axios, [0, -145], [0, 15], {
+    clamp: true,
+  });
+  const yLineSacle = useTransform(y_axios, [-200, 0], [1.2, 0.5], {
+    clamp: true,
+  });
+  const yLinesOpasity = useTransform(y_axios, [-120, -130], [0, 1], {
+    clamp: true,
+  });
+  const ySunLineLeft = useTransform(y_axios, [-130, -155], [0, -115], {
+    clamp: true,
+  });
+  const ySunLineRight = useTransform(y_axios, [-130, -155], [0, -115], {
     clamp: true,
   });
 
   //   deg up
-  const ySunDegBottom = useTransform(
-    y_axios,
-    [0, -145],
-    [-30 * vh, 11.3 * vh],
-    {
-      clamp: true,
-    }
-  );
-  const ySunDegRight = useTransform(
-    y_axios,
-    [-130, -145],
-    [11.4 * vw, 5 * vw],
-    {
-      clamp: true,
-    }
-  );
-  const ySunDegLeft = useTransform(y_axios, [-130, -145], [11.4 * vw, 5 * vw], {
+  const ySunDegBottom = useTransform(y_axios, [0, -155], [-150, 60], {
+    clamp: true,
+  });
+  const ySunDegRight = useTransform(y_axios, [-130, -155], [0, -75], {
+    clamp: true,
+  });
+  const ySunDegLeft = useTransform(y_axios, [-130, -155], [0, -75], {
     clamp: true,
   });
 
   useEffect(() => {
     async function fetchWeather() {
-      const weather = await getWeatherByDate(new Date());
-      console.log("weather fetched", weather);
+      const weathers = await getWeatherByDate(new Date());
+      console.log("weather fetched", weathers);
+      setWeather(weathers);
     }
     fetchWeather();
   }, []);
@@ -83,12 +78,12 @@ export default function MorningQuiz() {
 
   return (
     <div
-      className="w-full h-screen bg-black text-white 
-  flex justify-center relative items-center"
+      className="w-full h-full bg-black text-white 
+  flex flex-col justify-center relative items-center overflow-y-hidden"
     >
       <div
         ref={constraintsRef}
-        className="w-full bg-red-950 flex justify-center overflow-hidden h-[87vh] items-center"
+        className="w-full bg-red-950  flex justify-center   items-center absolute scale-1.9"
       >
         <motion.div
           drag="y"
@@ -99,65 +94,68 @@ export default function MorningQuiz() {
           onDrag={(event, info) => {
             console.log(info.offset.y);
           }}
-          style={{ y: y_axios }}
-          className="w-auto text-white  h-auto"
+          style={{ y: y_axios, marginTop: y_axios_margin }}
+          className="w-auto text-white w-full  h-auto "
         >
-          <div className="w-full bg-amber-900  flex flex-col items-center justify-center p-0   ">
+          <div className="w-full bg-amber-900 mt-[0vh] flex flex-col items-center justify-center p-0   ">
             <motion.img
               src="/public/svg/quiz/sun_stroke.svg"
-              style={{ marginBottom: yStroke, scale: yStrokeScale }}
-              className="w-[12.4vw] "
+              style={{
+                marginBottom: yStroke,
+                scale: yStrokeScale,
+                width: yStrokeW,
+                height: "auto",
+              }}
+              className="w-[45px] h-auto"
             ></motion.img>
-            <motion.div
-              className="relative h-[13.8125vh] w-full overflow-hidden  flex items-end justify-center "
-              //   style={{ scale: yStrokeScale }}
-            >
+            <motion.div className="relative h-[100px] w-full overflow-hidden  flex items-end justify-center">
               {/* Right */}
               <motion.img
                 src="/public/svg/quiz/sun_side_line.svg"
-                className="absolute  w-[5.61vw] bottom-[4.3vh]"
+                className="absolute  w-[21px] "
                 style={{
-                  scale: yStrokeScale,
+                  scale: yLineSacle,
                   bottom: ySunLeftLineBottom,
-                  right: ySunLineRight,
+                  marginRight: ySunLineRight,
                   opacity: yLinesOpasity,
                 }}
               ></motion.img>
               <motion.img
                 src="/public/svg/quiz/sun_side_line.svg"
-                className="absolute  w-[5.61vw] rotate-135 bottom-[4.3vh]"
+                className="absolute   w-[21px] rotate-135 bottom-[0px]"
                 style={{
-                  scale: yStrokeScale,
+                  scale: yLineSacle,
                   bottom: ySunDegBottom,
-                  right: ySunDegRight,
+                  marginRight: ySunDegRight,
                   opacity: yLinesOpasity,
                 }}
               ></motion.img>
               {/* LEFT */}
               <motion.img
                 src="/public/svg/quiz/sun_side_line.svg"
-                className="absolute  w-[5.61vw] bottom-[4.3vh]"
+                className="absolute  w-[21px]  
+                "
                 style={{
-                  scale: yStrokeScale,
+                  scale: yLineSacle,
                   bottom: ySunLeftLineBottom,
-                  left: ySunLineLeft,
+                  marginLeft: ySunLineLeft,
                   opacity: yLinesOpasity,
                 }}
               ></motion.img>
               <motion.img
                 src="/public/svg/quiz/sun_side_line.svg"
-                className="absolute  w-[5.61vw] rotate-45 bottom-[4.3vh]"
+                className="absolute   w-[21px] rotate-45 bottom-[0px]"
                 style={{
-                  scale: yStrokeScale,
+                  scale: yLineSacle,
                   bottom: ySunDegBottom,
-                  left: ySunDegLeft,
+                  marginLeft: ySunDegLeft,
                   opacity: yLinesOpasity,
                 }}
               ></motion.img>
               {/* SUN */}
               <motion.img
                 src="/public/svg/quiz/sun_circle.svg"
-                className="w-[12.38vw] bg-black rounded-t-4xl  absolute bottom-0 mb-[-8vh]"
+                className="w-[85px] bg-black rounded-t-[1000px]  absolute bottom-0 mb-[0px]"
                 style={{
                   scale: ySunCircleScale,
                   y: ySunCircle,
@@ -167,7 +165,7 @@ export default function MorningQuiz() {
             </motion.div>
             <motion.img
               src="/public/svg/quiz/sun_line.svg"
-              className="w-[36vw]"
+              className="w-[113px]"
               style={{ scale: yLineScale }}
             ></motion.img>
           </div>
@@ -178,6 +176,9 @@ export default function MorningQuiz() {
         </div> */}
         </motion.div>
       </div>
+      <motion.div>
+        <MorningQuizTitle weather={weather}></MorningQuizTitle>
+      </motion.div>
     </div>
   );
 }
