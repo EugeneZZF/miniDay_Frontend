@@ -6,14 +6,18 @@ import MorningQuizTitle from "./morningQuizTitle";
 import ButtonNextQuiz from "./ButtonNextQuiz";
 import type { WeatherResult, WeatherError } from "../lib/weatherApi";
 
-export default function MorningQuiz() {
+type MorningQuizProps = {
+  onNext: () => void;
+};
+
+export default function MorningQuiz({ onNext }: MorningQuizProps) {
   const [weather, setWeather] = useState<WeatherResult | WeatherError | null>(
     null
   );
 
   const y_axios = useMotionValue(0);
-  const y_axios_margin = useTransform(y_axios, [-100, 0], [-300, 0]);
-  const y_title_margin = useTransform(y_axios, [-150, 0], [-200, 0]);
+  const y_axios_margin = useTransform(y_axios, [-100, 0], [-290, 0]);
+  const y_title_margin = useTransform(y_axios, [-150, 0], [-150, 70]);
   const y_title_opacity = useTransform(y_axios, [-90, -150], [0, 1]);
   //   SUN
   const yStroke = useTransform(y_axios, [-190, 0], [0, -90]);
@@ -86,7 +90,7 @@ export default function MorningQuiz() {
     >
       <div
         ref={constraintsRef}
-        className="w-full bg-red-950  flex justify-center   items-center absolute scale-1.9 z-10"
+        className="w-full   flex justify-center   items-center absolute scale-1.9 z-10"
       >
         <motion.div
           drag="y"
@@ -94,13 +98,13 @@ export default function MorningQuiz() {
           dragMomentum={false}
           dragConstraints={{ top: -155, bottom: 0 }}
           // initial={{ opacity: 0, y:  }}
-          onDrag={(event, info) => {
-            console.log(y_axios);
-          }}
+          // onDrag={(event, info) => {
+          //   console.log(y_axios);
+          // }}
           style={{ y: y_axios, marginTop: y_axios_margin }}
           className="w-auto text-white w-full  h-auto "
         >
-          <div className="w-full bg-amber-900 mt-[0vh] flex flex-col items-center justify-center p-0   ">
+          <div className="w-full mt-[0vh] flex flex-col items-center justify-center p-0   ">
             <motion.img
               src="/public/svg/quiz/sun_stroke.svg"
               style={{
@@ -180,12 +184,11 @@ export default function MorningQuiz() {
         </motion.div>
       </div>
       <motion.div
+        className="mb-[-5rem]"
         style={{ marginTop: y_title_margin, opacity: y_title_opacity }}
       >
         <MorningQuizTitle weather={weather}></MorningQuizTitle>
-        <ButtonNextQuiz bg={"#fff"} onClick={}>
-          {" "}
-        </ButtonNextQuiz>
+        <ButtonNextQuiz onClick={onNext} />
       </motion.div>
     </div>
   );

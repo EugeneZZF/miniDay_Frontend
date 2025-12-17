@@ -1,37 +1,36 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
-import MorningQuiz from "./morningQuiz";
-import MorningQuizSleep from "./MorningQuizSleep";
-const TOTAL_SCREENS = 4;
+import QuizScreen1 from "./QuizScreen1";
+import QuizScreen2 from "./QuizScreen2";
+import MorningQuiz from "./MorningQuiz";
 
 export default function QuizPage() {
   const [currentScreen, setCurrentScreen] = useState(0);
-  const [flipped, setFlipped] = useState(false);
+
   const handleNext = () => {
-    setFlipped(!flipped);
-    setCurrentScreen((perv) => perv + 1);
+    setCurrentScreen((prev) => prev + 1);
   };
+
   const screens = [
-    // <QuizPage1
-    //   key="screen1"
-    //   bg="#ffcc00"
-    //   currentScreen={currentScreen}
-    //   handleNext={handleNext}
-    // ></QuizPage1>,
-    <MorningQuiz key="screen_1"></MorningQuiz>,
-    <MorningQuizSleep key="screen_2"></MorningQuizSleep>,
+    <MorningQuiz key="screen_1" onNext={handleNext} />,
+    <QuizScreen1 key="screen_2" onNext={handleNext} />,
+    <QuizScreen2 key="screen_3" onNext={handleNext} />,
   ];
 
   return (
-    <div
-      className="w-full h-screen bg-amber-500
-     flex items-center justify-center"
-    >
+    <div className="w-full h-full bg-black flex items-center justify-center relative overflow-hidden">
       <AnimatePresence mode="wait">
-        {/* {screens[currentScreen]} */}
-        {screens.map((screen, index) => (
-          <div key={index}>{screen}</div>
-        ))}
+        {currentScreen < screens.length && (
+          <motion.div
+            key={currentScreen}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="w-full h-full"
+          >
+            {screens[currentScreen]}
+          </motion.div>
+        )}
       </AnimatePresence>
     </div>
   );
