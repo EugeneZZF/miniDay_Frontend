@@ -3,6 +3,7 @@ import { motion, useMotionValue, useTransform } from "framer-motion";
 import { getWeatherByDate } from "../lib/weatherApi";
 import { useState, useRef, useEffect } from "react";
 import MorningQuizTitle from "./morningQuizTitle";
+import ButtonNextQuiz from "./ButtonNextQuiz";
 import type { WeatherResult, WeatherError } from "../lib/weatherApi";
 
 export default function MorningQuiz() {
@@ -12,6 +13,8 @@ export default function MorningQuiz() {
 
   const y_axios = useMotionValue(0);
   const y_axios_margin = useTransform(y_axios, [-100, 0], [-300, 0]);
+  const y_title_margin = useTransform(y_axios, [-150, 0], [-200, 0]);
+  const y_title_opacity = useTransform(y_axios, [-90, -150], [0, 1]);
   //   SUN
   const yStroke = useTransform(y_axios, [-190, 0], [0, -90]);
 
@@ -83,7 +86,7 @@ export default function MorningQuiz() {
     >
       <div
         ref={constraintsRef}
-        className="w-full bg-red-950  flex justify-center   items-center absolute scale-1.9"
+        className="w-full bg-red-950  flex justify-center   items-center absolute scale-1.9 z-10"
       >
         <motion.div
           drag="y"
@@ -92,7 +95,7 @@ export default function MorningQuiz() {
           dragConstraints={{ top: -155, bottom: 0 }}
           // initial={{ opacity: 0, y:  }}
           onDrag={(event, info) => {
-            console.log(info.offset.y);
+            console.log(y_axios);
           }}
           style={{ y: y_axios, marginTop: y_axios_margin }}
           className="w-auto text-white w-full  h-auto "
@@ -176,8 +179,13 @@ export default function MorningQuiz() {
         </div> */}
         </motion.div>
       </div>
-      <motion.div>
+      <motion.div
+        style={{ marginTop: y_title_margin, opacity: y_title_opacity }}
+      >
         <MorningQuizTitle weather={weather}></MorningQuizTitle>
+        <ButtonNextQuiz bg={"#fff"} onClick={}>
+          {" "}
+        </ButtonNextQuiz>
       </motion.div>
     </div>
   );
